@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>r/place test</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/faunadb@latest/dist/faunadb-min.js"></script>
+<script src="pixelHandler.js"></script>
+<style>
+    body {
+  display: flex;
+  justify-content: center;
+padding-top: 200px;
+  background-color: #131313;
+  padding-bottom: 200px;
+  font-family: 'Segoe UI';
+  color: white;
+
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #202020;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.container{
+    --size: 4;
+    height: 800px;
+    display: grid;
+    grid-template-columns: repeat(var(--size), 1fr);
+    grid-template-rows: repeat(var(--size), 1fr);
+    width: 800px;
+}
+
+.pixel{
+    background-color: white;
+    border: 1px solid black;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+input{
+    width: 30%;
+}
+
+button{
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    transition: all .3s ease;
+    background-color: #41b565;
+    border-radius: 2px;
+    font-size: 16px;
+}
+button:hover{
+    font-size: 17px;
+    background-color: #43cc6f;
+}
+</style>
+<body>
+    <div class="navbar">
+<input id="colour" type="color"><br><br>
+<p id="selected">Selected: None</p><br>
+<button id="place" onclick="place()">Place!</button>
+    </div>
+    <div id="grid" class="container">
+    </div>
+  </body>
+  </html>
