@@ -157,8 +157,7 @@ function place(){
           ).then(function(ret){
       
             alert("Pixel placed!")
-            document.getElementById("place").disabled = true;
-            document.getElementById("place").style.cursor = "not-allowed"
+           
   
       
         }).catch(function(e){
