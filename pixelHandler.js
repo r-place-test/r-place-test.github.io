@@ -100,6 +100,8 @@ function populateGrid(amount){
     document.getElementById("grid").style.setProperty('--size', amount)
     for (let i = 0; i < amount * amount; i++) {
 
+    
+      
         let div = document.createElement('div')
         div.id = i
         div.classList.add('pixel')
@@ -107,14 +109,22 @@ function populateGrid(amount){
 
             highlight(i)
         })
+        if(i == selectedpixel){
+          div.style.backgroundColor = document.getElementById("colour").value
+        }
         let index = ret.data.pixels.findIndex(function(item, z) {
             return item.num === i
           });
           if(index != -1){
               div.style.backgroundColor = ret.data. pixels[index].colour
           }
+
+          
+
+          
  
         document.getElementById("grid").appendChild(div)
+      
 
     }
 
@@ -130,12 +140,13 @@ function populateGrid(amount){
 
 async function highlight(num){
 
-  
+  let oldColour = document.getElementById(num).style.backgroundColor
+  selectedpixel = num
     populateGrid(75)
 
-   await sleep(250)
+   await sleep(500)
 
-    let oldColour = document.getElementById(num).style.backgroundColor
+    
     let owner = ""
     let index = pixels.findIndex(function(item, z) {
         return item.num === num
@@ -153,7 +164,7 @@ async function highlight(num){
     }
     document.getElementById(num).style.backgroundColor = document.getElementById("colour").value
     document.getElementById("selected").innerHTML = "Selected: Pixel <b>" + num + "</b><br>Current Colour: <b><font style=\"color:" + oldColour + "\">" + oldColour + "</font></b><br>Owned by: <b>" + owner + "</b>"
-    selectedpixel = num
+   
     
 }
 
