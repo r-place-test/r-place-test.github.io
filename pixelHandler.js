@@ -2,7 +2,7 @@
 var faunadb = window.faunadb
 var q = faunadb.query
 var client = new faunadb.Client({
-  secret: 'fnAEjmpO7GAAxzq6x7k0IR54POOAatBXQ2mOl3Ix',
+  secret: 'fnAEjrpvNoAAwFcmnqB8fJEAJvS1E95-LhqVQKsH',
   domain: 'db.eu.fauna.com',
   scheme: 'https',
 })
@@ -23,12 +23,14 @@ function makeid(length) {
 }
 
 
+function sleep(milisec) {
+  return new Promise(resolve => {
+  setTimeout(() => { resolve('') }, milisec);
+  })
+  }
+
 window.onload = function(){
 
-    if(localStorage.getItem("placeUsername") == null)
-    {
-        localStorage.setItem("placeUsername", "User" + makeid(4))
-    }
     client.query(
         q.Get(
           q.Match(q.Index('canvas_by_name'), "r/place")
@@ -85,9 +87,19 @@ window.onload = function(){
 }
 
 function populateGrid(amount){
+
+  client.query(
+    q.Get(
+      q.Match(q.Index('canvas_by_name'), "r/place")
+    )
+  )
+        
+  .then(function(ret) {
+  
     document.getElementById("grid").innerHTML = ""
     document.getElementById("grid").style.setProperty('--size', amount)
     for (let i = 0; i < amount * amount; i++) {
+
         let div = document.createElement('div')
         div.id = i
         div.classList.add('pixel')
@@ -95,21 +107,34 @@ function populateGrid(amount){
 
             highlight(i)
         })
-        let index = pixels.findIndex(function(item, z) {
+        let index = ret.data.pixels.findIndex(function(item, z) {
             return item.num === i
           });
           if(index != -1){
-              div.style.backgroundColor = pixels[index].colour
+              div.style.backgroundColor = ret.data. pixels[index].colour
           }
  
         document.getElementById("grid").appendChild(div)
 
     }
+
+})
+      .catch(function(e){
+          console.log(e)
+         document.write("Error: " + e)
+      });
+
+
+    
 }
 
-function highlight(num){
+async function highlight(num){
 
+  
     populateGrid(75)
+
+   await sleep(250)
+
     let oldColour = document.getElementById(num).style.backgroundColor
     let owner = ""
     let index = pixels.findIndex(function(item, z) {
@@ -139,32 +164,58 @@ function place(){
     }
     else{
 
-        let index = pixels.findIndex(function(item, z) {
-            return item.num === selectedpixel
-          });
-          if(index != -1){
-              pixels.splice(index, 1)
-          }
 
-        pixels.push({num: selectedpixel, colour: document.getElementById("colour").value, owner: localStorage.getItem("placeUsername")})
-    
-        client.query(
-          q.Update(q.Ref(q.Collection("canvas"), "328316630819930304"), {
-          data: {
-            pixels: pixels
-          },
-          })
-          ).then(function(ret){
+      client.query(
+        q.Get(
+          q.Match(q.Index('canvas_by_name'), "r/place")
+        )
+      )
+            
+      .then(function(ret) {
       
-            alert("Pixel placed!")
-           
-  
-      
-        }).catch(function(e){
-      
-            console.error(e)
-      
+        let pixels = ret.data.pixels
+        let index =pixels.findIndex(function(item, z) {
+          return item.num === selectedpixel
         });
+        if(index != -1){
+            pixels.splice(index, 1)
+            pixels.push({num: selectedpixel, colour: document.getElementById("colour").value, owner: localStorage.getItem("placeUsername")})
+        }
+        else{
+          pixels.push({num: selectedpixel, colour: document.getElementById("colour").value, owner: localStorage.getItem("placeUsername")})
+        }
+
+
+     
+  
+      client.query(
+        q.Update(q.Ref(q.Collection("canvas"), "328404991715836096"), {
+        data: {
+          pixels: pixels
+        },
+        })
+        ).then(function(ret){
+    
+          alert("Pixel placed!")
+
+    
+      }).catch(function(e){
+    
+          console.error(e)
+    
+      });
+
+
+    
+    })
+          .catch(function(e){
+              console.log(e)
+             document.write("Error: " + e)
+          });
+
+          
+          
+        
 
 
     
