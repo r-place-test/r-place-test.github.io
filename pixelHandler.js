@@ -159,10 +159,7 @@ function place(){
             alert("Pixel placed!")
             document.getElementById("place").disabled = true;
             document.getElementById("place").style.cursor = "not-allowed"
-    setTimeout(function() {
-        document.getElementById("place").disabled = false;
-        document.getElementById("place").style.cursor = "pointer"
-    }, 5000);
+  
       
         }).catch(function(e){
       
