@@ -44,7 +44,7 @@ window.onload = function(){
         for (let i = 0; i < e.data.pixels.length; i++) {
           pixels.push({colour: e.data.pixels[i].colour, num: e.data.pixels[i].num, owner: e.data.pixels[i].owner})
         }
-        populateGrid(50)
+        populateGrid(75)
       var data = ('action' in e)
         ? e["document"].data
         : e.data
@@ -79,7 +79,7 @@ window.onload = function(){
           });
 
 
-    populateGrid(50)
+    populateGrid(75)
 
 
 }
@@ -109,7 +109,7 @@ function populateGrid(amount){
 
 function highlight(num){
 
-    populateGrid(50)
+    populateGrid(75)
     let oldColour = document.getElementById(num).style.backgroundColor
     let owner = ""
     let index = pixels.findIndex(function(item, z) {
